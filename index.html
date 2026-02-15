@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商贸统计器</title>
+    <title>商贸统计器 - 完整版</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -45,6 +45,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
         
         .header-content h1 {
@@ -122,6 +124,13 @@
             color: var(--secondary-color);
         }
         
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
         .form-group {
             margin-bottom: 20px;
         }
@@ -133,7 +142,13 @@
             color: var(--primary-color);
         }
         
-        input, select, .status-light {
+        label i {
+            color: var(--secondary-color);
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        input, select, textarea {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid var(--border-color);
@@ -142,10 +157,31 @@
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--secondary-color);
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .status-lights-container {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .status-lights-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .status-lights {
@@ -155,48 +191,68 @@
             margin-bottom: 15px;
         }
         
-        .status-light {
+        .status-light-item {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
+            gap: 8px;
         }
         
-        .status-light:hover {
-            transform: translateY(-2px);
+        .status-light-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .status-light-select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
         }
         
         .yellow-light {
             background-color: #fef9e7;
             color: #b7950b;
-            border: 2px solid #f7dc6f;
+            border-color: #f7dc6f;
         }
         
         .blue-light {
             background-color: #eaf2f8;
             color: #2874a6;
-            border: 2px solid #3498db;
+            border-color: #3498db;
         }
         
         .green-light {
             background-color: #eafaf1;
             color: #196f3d;
-            border: 2px solid #58d68d;
+            border-color: #58d68d;
         }
         
         .status-info {
-            background-color: #f8f9fa;
+            background-color: white;
             padding: 15px;
             border-radius: 8px;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 14px;
             border-left: 4px solid var(--secondary-color);
         }
         
-        .status-path {
-            margin-top: 15px;
+        .status-code {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .status-path-container {
+            margin-top: 20px;
             padding: 15px;
             background-color: #f0f8ff;
             border-radius: 8px;
@@ -221,6 +277,7 @@
         .status-sequence {
             display: flex;
             flex-wrap: wrap;
+            align-items: center;
             gap: 8px;
             margin-top: 10px;
         }
@@ -335,6 +392,8 @@
             margin-bottom: 15px;
             padding-bottom: 12px;
             border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .order-category {
@@ -377,14 +436,21 @@
         
         .order-details {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin-bottom: 15px;
         }
         
+        @media (max-width: 768px) {
+            .order-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
         .detail-item {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 5px;
             padding: 8px 0;
             border-bottom: 1px dashed var(--border-color);
         }
@@ -392,11 +458,14 @@
         .detail-label {
             font-weight: 600;
             color: var(--text-light);
+            font-size: 12px;
         }
         
         .detail-value {
             font-weight: 600;
             color: var(--primary-color);
+            font-size: 14px;
+            word-break: break-word;
         }
         
         .order-status {
@@ -406,16 +475,29 @@
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .order-lights {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+        }
+        
+        .order-light-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .order-light-label {
+            font-size: 12px;
+            color: var(--text-light);
         }
         
         .order-light {
-            width: 24px;
-            height: 24px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
         }
         
@@ -446,6 +528,16 @@
         .financial-completed {
             background-color: #eafaf1;
             color: #196f3d;
+        }
+        
+        .order-remarks {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-light);
+            border-left: 3px solid var(--secondary-color);
         }
         
         .order-actions {
@@ -507,6 +599,7 @@
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         
         .filter-btn {
@@ -532,8 +625,8 @@
 <body>
     <header>
         <div class="header-content">
-            <h1><i class="fas fa-calculator"></i> 商贸统计器</h1>
-            <p>管理您的商贸订单，跟踪物流、货物和钱款状态</p>
+            <h1><i class="fas fa-clipboard-list"></i> 商贸统计器</h1>
+            <p>管理您的商贸订单，完整记录货品信息与状态跟踪</p>
         </div>
         <div class="stats">
             <div class="stat-item">
@@ -556,95 +649,110 @@
             <div class="card">
                 <h2 class="card-title"><i class="fas fa-plus-circle"></i> 添加/编辑订单</h2>
                 
-                <div class="form-group">
-                    <label for="order-date">日期</label>
-                    <input type="date" id="order-date">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="far fa-calendar-alt"></i> 日期</label>
+                        <input type="date" id="order-date">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> 类别</label>
+                        <select id="order-category">
+                            <option value="shoe">鞋</option>
+                            <option value="clothing">衣服/裤子</option>
+                            <option value="electronics">电子</option>
+                            <option value="beauty">美妆</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-barcode"></i> 货号/型号</label>
+                        <input type="text" id="product-code" placeholder="例如: AJ1234-001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-ruler"></i> 尺码/参数</label>
+                        <input type="text" id="product-size" placeholder="例如: 42/L/黑色">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill-wave"></i> 拿货价 (元/件)</label>
+                        <input type="number" id="unit-price" step="0.001" min="0" placeholder="0.000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-cubes"></i> 件数</label>
+                        <input type="number" id="quantity" min="1" value="1">
+                    </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="order-category">类别</label>
-                    <select id="order-category">
-                        <option value="shoe">鞋</option>
-                        <option value="clothing">衣服/裤子</option>
-                        <option value="electronics">电子</option>
-                        <option value="beauty">美妆</option>
-                        <option value="other">其他</option>
-                    </select>
+                    <label><i class="fas fa-calculator"></i> 总拿货价 (元)</label>
+                    <input type="text" id="total-price" readonly placeholder="自动计算">
                 </div>
                 
-                <div class="form-group">
-                    <label for="unit-price">拿货价 (元/件)</label>
-                    <input type="number" id="unit-price" step="0.001" min="0" placeholder="0.000">
-                </div>
-                
-                <div class="form-group">
-                    <label for="quantity">件数</label>
-                    <input type="number" id="quantity" min="1" value="1">
-                </div>
-                
-                <div class="form-group">
-                    <label>总拿货价 (元)</label>
-                    <input type="text" id="total-price" readonly>
-                </div>
-                
-                <div class="form-group">
-                    <label>状态指示灯</label>
+                <div class="status-lights-container">
+                    <div class="status-lights-title">
+                        <i class="fas fa-lightbulb"></i> 状态指示灯
+                    </div>
+                    
                     <div class="status-lights">
-                        <select id="logistics-status" class="status-light yellow-light">
-                            <option value="yellow">黄 - 未完成</option>
-                            <option value="blue">蓝 - 处理中</option>
-                            <option value="green">绿 - 已完成</option>
-                        </select>
-                        <select id="goods-status" class="status-light yellow-light">
-                            <option value="yellow">黄 - 有问题</option>
-                            <option value="blue">蓝 - 检验中</option>
-                            <option value="green">绿 - 无问题</option>
-                        </select>
-                        <select id="money-status" class="status-light yellow-light">
-                            <option value="yellow">黄 - 未结算</option>
-                            <option value="blue">蓝 - 处理中</option>
-                            <option value="green">绿 - 已结算</option>
-                        </select>
+                        <div class="status-light-item">
+                            <span class="status-light-label"><i class="fas fa-truck"></i> 物流</span>
+                            <select id="logistics-status" class="status-light-select yellow-light">
+                                <option value="yellow" class="yellow-light">黄 - 未完成</option>
+                                <option value="blue" class="blue-light">蓝 - 处理中</option>
+                                <option value="green" class="green-light">绿 - 已完成</option>
+                            </select>
+                        </div>
+                        
+                        <div class="status-light-item">
+                            <span class="status-light-label"><i class="fas fa-box"></i> 货物</span>
+                            <select id="goods-status" class="status-light-select yellow-light">
+                                <option value="yellow" class="yellow-light">黄 - 有问题</option>
+                                <option value="blue" class="blue-light">蓝 - 检验中</option>
+                                <option value="green" class="green-light">绿 - 无问题</option>
+                            </select>
+                        </div>
+                        
+                        <div class="status-light-item">
+                            <span class="status-light-label"><i class="fas fa-coins"></i> 钱款</span>
+                            <select id="money-status" class="status-light-select yellow-light">
+                                <option value="yellow" class="yellow-light">黄 - 未结算</option>
+                                <option value="blue" class="blue-light">蓝 - 处理中</option>
+                                <option value="green" class="green-light">绿 - 已结算</option>
+                            </select>
+                        </div>
                     </div>
+                    
                     <div class="status-info">
-                        当前状态: <span id="current-status-text">下单后，待发货</span>
+                        <span class="status-code" id="status-code">S1</span>
+                        <span id="current-status-text">下单后，待发货</span>
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="financial-status">财务结算状态</label>
-                    <select id="financial-status">
-                        <option value="pending">待财务结算</option>
-                        <option value="completed">已结算</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-file-invoice"></i> 财务结算状态</label>
+                        <select id="financial-status">
+                            <option value="pending">待财务结算</option>
+                            <option value="completed">已结算</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-pen"></i> 备注</label>
+                        <input type="text" id="remarks" placeholder="运费/特殊情况等">
+                    </div>
                 </div>
                 
-                <div id="status-path-container" class="status-path">
-                    <div class="status-path-title">
-                        <i class="fas fa-route"></i> 状态路径: 路径1 - 正常无瑕疵，直接卖出
-                    </div>
-                    <div class="status-path-desc">
-                        业务场景：电商拿货无问题，发往某物后检验通过并卖出结算
-                    </div>
-                    <div class="status-sequence">
-                        <span class="status-item yellow-light">S1</span>
-                        <span class="status-arrow">→</span>
-                        <span class="status-item blue-light">S4</span>
-                        <span class="status-arrow">→</span>
-                        <span class="status-item green-light">S6</span>
-                        <span class="status-arrow">→</span>
-                        <span class="status-item green-light">S11</span>
-                        <span class="status-arrow">→</span>
-                        <span class="status-item blue-light">S4</span>
-                        <span class="status-arrow">→</span>
-                        <span class="status-item green-light">S8</span>
-                        <span class="status-arrow">→</span>
-                        <span class="status-item green-light">S11</span>
-                        <span class="status-arrow">→</span>
-                        <span class="status-item green-light">S12</span>
-                        <span class="status-arrow">→</span>
-                        <span class="status-item green-light">S13</span>
-                    </div>
+                <div id="status-path-container" class="status-path-container">
+                    <!-- 动态更新 -->
                 </div>
                 
                 <div class="button-group">
@@ -665,7 +773,7 @@
                 <h2 class="card-title"><i class="fas fa-list"></i> 订单列表</h2>
                 
                 <div class="search-bar">
-                    <input type="text" id="search-input" class="search-input" placeholder="搜索订单 (类别、状态、日期...)">
+                    <input type="text" id="search-input" class="search-input" placeholder="搜索订单 (类别、货号、备注...)">
                     <button id="search-btn" class="search-btn">
                         <i class="fas fa-search"></i> 搜索
                     </button>
@@ -678,7 +786,6 @@
                 </div>
                 
                 <div class="orders-list" id="orders-list">
-                    <!-- 订单列表将通过JavaScript动态生成 -->
                     <div class="empty-state">
                         <i class="fas fa-clipboard-list"></i>
                         <h3>暂无订单</h3>
@@ -690,128 +797,160 @@
     </div>
     
     <div class="footer">
-        <p>商贸统计器 v1.0 | 数据存储于浏览器本地存储中 | 订单将在结算15天后自动删除</p>
+        <p>商贸统计器 v2.0 | 数据存储于浏览器本地存储中 | 订单将在结算15天后自动删除</p>
     </div>
 
     <script>
-        // 状态定义和路径映射
+        // ==================== 状态定义表（根据最新业务规则）====================
         const statusDefinitions = {
-            "yellow-yellow-yellow": { code: "S1", text: "下单后，待发货" },
-            "yellow-yellow-green": { code: "S3", text: "未发货退款完成（订单结束）" },
-            "blue-yellow-yellow": { code: "S4", text: "运输中，瑕疵未知" },
-            "blue-yellow-blue": { code: "S5", text: "运输中，退款/拦截处理中" },
-            "green-yellow-yellow": { code: "S6", text: "货到手，重度瑕疵" },
-            "green-yellow-blue": { code: "S7", text: "重度瑕疵，退款中" },
-            "green-blue-yellow": { code: "S8", text: "货到手，检验中/轻度瑕疵" },
-            "green-blue-blue": { code: "S9", text: "轻度瑕疵，退款/协商中" },
-            "green-blue-green": { code: "S10", text: "轻度瑕疵，钱款已结（售后阶段）" },
-            "green-green-yellow": { code: "S11", text: "检验通过，待收款" },
-            "green-green-blue": { code: "S12", text: "检验通过，结算中" },
-            "green-green-green": { code: "S13", text: "交易完全结束" }
+            // 格式: "物流-货物-钱款": { code: "Sx", text: "状态描述", paths: ["path1", "path2"] }
+            "yellow-yellow-yellow": { 
+                code: "S1", 
+                text: "下单后，待发货",
+                paths: ["path1", "path5"]
+            },
+            "yellow-yellow-green": { 
+                code: "S3", 
+                text: "未发货退款完成（订单结束）",
+                paths: ["path2", "path4C", "path5", "path6A", "path6B", "path6C", "path7B"]
+            },
+            "blue-yellow-yellow": { 
+                code: "S4", 
+                text: "运输中，瑕疵未知",
+                paths: ["path1", "path4B", "path4C", "path6A", "path6B", "path6C", "path7B"]
+            },
+            "blue-yellow-blue": { 
+                code: "S5", 
+                text: "运输中，退款/拦截处理中",
+                paths: ["path6A", "path6B", "path6C"]
+            },
+            "green-yellow-yellow": { 
+                code: "S6", 
+                text: "货到手，重度瑕疵",
+                paths: ["path1", "path2", "path4B", "path4C", "path6B", "path7A", "path7B"]
+            },
+            "green-yellow-blue": { 
+                code: "S7", 
+                text: "重度瑕疵，退款中",
+                paths: ["path2", "path4C", "path6A", "path6B", "path6C", "path7B"]
+            },
+            "green-blue-yellow": { 
+                code: "S8", 
+                text: "货到手，检验中/轻度瑕疵",
+                paths: ["path1", "path3", "path4A", "path4B", "path4C", "path7A", "path7B", "path8"]
+            },
+            "green-blue-blue": { 
+                code: "S9", 
+                text: "轻度瑕疵，退款/协商中",
+                paths: ["path3", "path8"]
+            },
+            "green-blue-green": { 
+                code: "S10", 
+                text: "轻度瑕疵，钱款已结（售后阶段）",
+                paths: ["path3", "path8"]
+            },
+            "green-green-yellow": { 
+                code: "S11", 
+                text: "检验通过，待收款",
+                paths: ["path1", "path4A", "path4B", "path9"]
+            },
+            "green-green-blue": { 
+                code: "S12", 
+                text: "检验通过，结算中",
+                paths: ["path1", "path3", "path4A", "path9"]
+            },
+            "green-green-green": { 
+                code: "S13", 
+                text: "交易完全结束",
+                paths: ["path1", "path3", "path4A", "path8", "path9"]
+            }
         };
 
-        // 路径定义
+        // ==================== 路径定义（包含完整业务场景说明）====================
         const statusPaths = {
             "path1": {
                 title: "路径1 - 正常无瑕疵，直接卖出",
-                description: "业务场景：电商拿货无问题，发往某物后检验通过并卖出结算",
+                description: "电商拿货无问题，发往平台后检验通过并卖出结算",
                 sequence: ["S1", "S4", "S6", "S11", "S4", "S8", "S11", "S12", "S13"]
             },
             "path2": {
                 title: "路径2 - 有重度瑕疵，直接退货退款",
-                description: "业务场景：你收到货发现重度瑕疵，直接退回电商商家",
+                description: "收到货发现重度瑕疵，直接退回电商商家",
                 sequence: ["S6", "S7", "S3"]
             },
             "path3": {
-                title: "路径3 - 某物检验有轻度瑕疵，协商降价成功",
-                description: "业务场景：某物检验发现轻微瑕疵，与买家协商降价后成交",
+                title: "路径3 - 轻度瑕疵，协商降价成功",
+                description: "平台检验发现轻微瑕疵，与买家协商降价后成交",
                 sequence: ["S8", "S10", "S12", "S13"]
             },
             "path4A": {
-                title: "路径4A - 某物检验轻度瑕疵，协商降价失败（放95分平台）",
-                description: "业务场景：买家不同意降价，你选择放95分平台",
+                title: "路径4A - 轻度瑕疵，协商失败（放95分平台）",
+                description: "买家不同意降价，选择放95分平台自动通过",
                 sequence: ["S8", "S11", "S12", "S13"]
             },
             "path4B": {
-                title: "路径4B - 某物检验轻度瑕疵，协商降价失败（退回修复后重发）",
-                description: "业务场景：买家不同意降价，退回给你，你修复后重发某物",
+                title: "路径4B - 轻度瑕疵，协商失败（退回修复后重发）",
+                description: "退回给你，修复后重发平台",
                 sequence: ["S8", "S4", "S6", "S11", "S4", "S8"]
             },
             "path4C": {
-                title: "路径4C - 某物检验轻度瑕疵，协商降价失败（直接退回商家）",
-                description: "业务场景：买家不同意降价，直接退回电商商家",
+                title: "路径4C - 轻度瑕疵，协商失败（直接退回商家）",
+                description: "直接退回电商商家",
                 sequence: ["S8", "S4", "S6", "S7", "S3"]
             },
             "path5": {
                 title: "路径5 - 未发货砍单或自主取消",
-                description: "业务场景：下单后未发货即取消，秒退款",
+                description: "下单后未发货即取消，秒退款",
                 sequence: ["S1", "S3"]
             },
             "path6A": {
                 title: "路径6A - 已发货后利润波动，主动拦截成功",
-                description: "业务场景：运输中你发现利润下降，申请退款并拦截成功",
+                description: "运输中发现利润下降，申请退款并拦截成功",
                 sequence: ["S4", "S5", "S7", "S3"]
             },
             "path6B": {
                 title: "路径6B - 已发货后利润波动，拦截失败签收后退货",
-                description: "业务场景：运输中你发现利润下降，拦截失败，签收后退货",
+                description: "拦截失败，签收后退货",
                 sequence: ["S4", "S5", "S6", "S7", "S3"]
             },
             "path6C": {
                 title: "路径6C - 已发货后利润波动，拦截失败直接拒收",
-                description: "业务场景：运输中你发现利润下降，拦截失败，直接拒收",
+                description: "拦截失败，直接拒收",
                 sequence: ["S4", "S5", "S7", "S3"]
             },
             "path7A": {
-                title: "路径7A - 某物检验重度瑕疵，退回到你手",
-                description: "业务场景：某物检验判定为重度瑕疵，无协商直接退回你手",
+                title: "路径7A - 平台检验重度瑕疵，退回到你手",
+                description: "平台检验判定为重度瑕疵，退回你手自行处理",
                 sequence: ["S8", "S6"]
             },
             "path7B": {
-                title: "路径7B - 某物检验重度瑕疵，直接退回电商商家",
-                description: "业务场景：某物检验判定为重度瑕疵，直接退回电商商家",
+                title: "路径7B - 平台检验重度瑕疵，直接退回商家",
+                description: "平台检验判定为重度瑕疵，直接退回电商商家",
                 sequence: ["S8", "S4", "S6", "S7", "S3"]
             },
             "path8": {
                 title: "路径8 - 轻度瑕疵售后补偿完成",
-                description: "业务场景：确认收货后，因轻度瑕疵获得补偿，订单完结",
+                description: "确认收货后，因轻度瑕疵获得补偿，订单完结",
                 sequence: ["S8", "S10", "S13"]
             },
             "path9": {
                 title: "路径9 - 检验通过后申请价保/仅退款",
-                description: "业务场景：货已确认无瑕疵，但申请价格保护或部分退款",
+                description: "货已确认无瑕疵，申请价格保护或部分退款",
                 sequence: ["S11", "S12", "S13"]
             }
         };
 
-        // 状态到路径的映射
-        const statusToPathMap = {
-            "S1": ["path1", "path5"],
-            "S3": ["path2", "path4C", "path5", "path6A", "path6B", "path6C", "path7B"],
-            "S4": ["path1", "path4B", "path4C", "path6A", "path6B", "path6C", "path7B"],
-            "S5": ["path6A", "path6B", "path6C"],
-            "S6": ["path1", "path2", "path4B", "path4C", "path6B", "path7A", "path7B"],
-            "S7": ["path2", "path4C", "path6A", "path6B", "path6C", "path7B"],
-            "S8": ["path1", "path3", "path4A", "path4B", "path4C", "path7A", "path7B", "path8"],
-            "S9": [],
-            "S10": ["path3", "path8"],
-            "S11": ["path1", "path4A", "path4B", "path9"],
-            "S12": ["path1", "path3", "path4A", "path9"],
-            "S13": ["path1", "path3", "path4A", "path8", "path9"]
-        };
-
-        // 从本地存储获取订单数据
+        // ==================== 本地存储操作 ====================
         function getOrders() {
-            const ordersJson = localStorage.getItem('tradeOrders');
+            const ordersJson = localStorage.getItem('tradeOrdersV2');
             return ordersJson ? JSON.parse(ordersJson) : [];
         }
 
-        // 保存订单到本地存储
         function saveOrders(orders) {
-            localStorage.setItem('tradeOrders', JSON.stringify(orders));
+            localStorage.setItem('tradeOrdersV2', JSON.stringify(orders));
         }
 
-        // 计算总拿货价
+        // ==================== UI更新函数 ====================
         function calculateTotalPrice() {
             const unitPrice = parseFloat(document.getElementById('unit-price').value) || 0;
             const quantity = parseInt(document.getElementById('quantity').value) || 1;
@@ -820,7 +959,6 @@
             return totalPrice;
         }
 
-        // 更新状态显示
         function updateStatusDisplay() {
             const logisticsStatus = document.getElementById('logistics-status').value;
             const goodsStatus = document.getElementById('goods-status').value;
@@ -830,70 +968,104 @@
             const statusInfo = statusDefinitions[statusKey];
             
             if (statusInfo) {
+                document.getElementById('status-code').textContent = statusInfo.code;
                 document.getElementById('current-status-text').textContent = statusInfo.text;
-                
-                // 更新状态路径显示
-                updateStatusPath(statusInfo.code, statusKey);
-            }
-        }
-
-        // 更新状态路径显示
-        function updateStatusPath(statusCode, statusKey) {
-            const pathContainer = document.getElementById('status-path-container');
-            const possiblePaths = statusToPathMap[statusCode] || [];
-            
-            if (possiblePaths.length > 0) {
-                const path = statusPaths[possiblePaths[0]];
-                
-                // 更新路径标题和描述
-                const titleElement = pathContainer.querySelector('.status-path-title');
-                const descElement = pathContainer.querySelector('.status-path-desc');
-                const sequenceElement = pathContainer.querySelector('.status-sequence');
-                
-                titleElement.innerHTML = `<i class="fas fa-route"></i> ${path.title}`;
-                descElement.textContent = path.description;
-                
-                // 更新序列
-                sequenceElement.innerHTML = '';
-                path.sequence.forEach((code, index) => {
-                    const statusItem = document.createElement('span');
-                    statusItem.className = 'status-item';
-                    
-                    // 根据状态代码确定颜色
-                    const statusDef = Object.values(statusDefinitions).find(def => def.code === code);
-                    let statusColor = 'yellow-light';
-                    if (statusDef) {
-                        const statusKey = Object.keys(statusDefinitions).find(key => statusDefinitions[key].code === code);
-                        if (statusKey.includes('green-green')) {
-                            statusColor = 'green-light';
-                        } else if (statusKey.includes('blue')) {
-                            statusColor = 'blue-light';
-                        }
-                    }
-                    
-                    statusItem.className = `status-item ${statusColor}`;
-                    statusItem.textContent = code;
-                    sequenceElement.appendChild(statusItem);
-                    
-                    // 如果不是最后一个，添加箭头
-                    if (index < path.sequence.length - 1) {
-                        const arrow = document.createElement('span');
-                        arrow.className = 'status-arrow';
-                        arrow.textContent = '→';
-                        sequenceElement.appendChild(arrow);
-                    }
-                });
-                
-                pathContainer.style.display = 'block';
+                updateStatusPath(statusInfo);
             } else {
-                pathContainer.style.display = 'none';
+                document.getElementById('status-code').textContent = 'S0';
+                document.getElementById('current-status-text').textContent = '未知状态组合';
+            }
+            
+            // 更新下拉框样式
+            updateSelectStyle('logistics-status');
+            updateSelectStyle('goods-status');
+            updateSelectStyle('money-status');
+        }
+
+        function updateSelectStyle(selectId) {
+            const select = document.getElementById(selectId);
+            const value = select.value;
+            select.className = 'status-light-select';
+            if (value === 'yellow') {
+                select.classList.add('yellow-light');
+            } else if (value === 'blue') {
+                select.classList.add('blue-light');
+            } else if (value === 'green') {
+                select.classList.add('green-light');
             }
         }
 
-        // 重置表单
+        function updateStatusPath(statusInfo) {
+            const pathContainer = document.getElementById('status-path-container');
+            
+            if (!statusInfo || !statusInfo.paths || statusInfo.paths.length === 0) {
+                pathContainer.style.display = 'none';
+                return;
+            }
+            
+            // 取第一个路径作为推荐路径
+            const firstPath = statusInfo.paths[0];
+            const path = statusPaths[firstPath];
+            
+            if (!path) {
+                pathContainer.style.display = 'none';
+                return;
+            }
+            
+            let html = `
+                <div class="status-path-title">
+                    <i class="fas fa-route"></i> 推荐路径: ${path.title}
+                </div>
+                <div class="status-path-desc">
+                    ${path.description}
+                </div>
+                <div class="status-sequence">
+            `;
+            
+            path.sequence.forEach((code, index) => {
+                // 根据状态代码确定颜色
+                let colorClass = 'yellow-light';
+                if (code.includes('S13') || code.includes('S3')) {
+                    colorClass = 'green-light';
+                } else if (code.includes('S4') || code.includes('S5')) {
+                    colorClass = 'blue-light';
+                } else if (code.includes('S8')) {
+                    colorClass = 'green-light';
+                } else if (code.includes('S11') || code.includes('S12')) {
+                    colorClass = 'green-light';
+                }
+                
+                html += `<span class="status-item ${colorClass}">${code}</span>`;
+                
+                if (index < path.sequence.length - 1) {
+                    html += `<span class="status-arrow">→</span>`;
+                }
+            });
+            
+            html += `</div>`;
+            
+            // 如果有其他可能的路径，也显示
+            if (statusInfo.paths.length > 1) {
+                html += `<div style="margin-top: 15px; font-size: 13px; color: #666;">`;
+                html += `<i class="fas fa-info-circle"></i> 其他可能路径: `;
+                for (let i = 1; i < statusInfo.paths.length; i++) {
+                    const otherPath = statusPaths[statusInfo.paths[i]];
+                    if (otherPath) {
+                        html += `<span style="display: inline-block; margin-right: 10px;">${otherPath.title}</span>`;
+                    }
+                }
+                html += `</div>`;
+            }
+            
+            pathContainer.innerHTML = html;
+            pathContainer.style.display = 'block';
+        }
+
         function resetForm() {
             document.getElementById('order-date').value = new Date().toISOString().split('T')[0];
             document.getElementById('order-category').value = 'shoe';
+            document.getElementById('product-code').value = '';
+            document.getElementById('product-size').value = '';
             document.getElementById('unit-price').value = '';
             document.getElementById('quantity').value = '1';
             document.getElementById('total-price').value = '';
@@ -901,20 +1073,19 @@
             document.getElementById('goods-status').value = 'yellow';
             document.getElementById('money-status').value = 'yellow';
             document.getElementById('financial-status').value = 'pending';
+            document.getElementById('remarks').value = '';
             document.getElementById('edit-id').value = '';
             
-            // 更新状态显示
             updateStatusDisplay();
-            
-            // 更新按钮文本
             document.getElementById('save-btn').innerHTML = '<i class="fas fa-save"></i> 保存订单';
         }
 
-        // 保存订单
         function saveOrder() {
             const editId = document.getElementById('edit-id').value;
             const date = document.getElementById('order-date').value;
             const category = document.getElementById('order-category').value;
+            const productCode = document.getElementById('product-code').value;
+            const productSize = document.getElementById('product-size').value;
             const unitPrice = parseFloat(document.getElementById('unit-price').value) || 0;
             const quantity = parseInt(document.getElementById('quantity').value) || 1;
             const totalPrice = calculateTotalPrice();
@@ -922,29 +1093,32 @@
             const goodsStatus = document.getElementById('goods-status').value;
             const moneyStatus = document.getElementById('money-status').value;
             const financialStatus = document.getElementById('financial-status').value;
+            const remarks = document.getElementById('remarks').value;
             
-            // 验证必填字段
             if (!date || unitPrice <= 0) {
-                alert('请填写完整的订单信息！');
+                alert('请填写日期和拿货价！');
                 return;
             }
             
             const statusKey = `${logisticsStatus}-${goodsStatus}-${moneyStatus}`;
-            const statusInfo = statusDefinitions[statusKey];
+            const statusInfo = statusDefinitions[statusKey] || { code: 'S0', text: '未知状态' };
             
             const order = {
                 id: editId || Date.now().toString(),
                 date,
                 category,
+                productCode,
+                productSize,
                 unitPrice,
                 quantity,
                 totalPrice,
                 logisticsStatus,
                 goodsStatus,
                 moneyStatus,
-                statusCode: statusInfo ? statusInfo.code : 'S1',
-                statusText: statusInfo ? statusInfo.text : '未知状态',
+                statusCode: statusInfo.code,
+                statusText: statusInfo.text,
                 financialStatus,
+                remarks,
                 createdAt: editId ? undefined : new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
@@ -952,14 +1126,12 @@
             let orders = getOrders();
             
             if (editId) {
-                // 编辑现有订单
                 const index = orders.findIndex(o => o.id === editId);
                 if (index !== -1) {
                     order.createdAt = orders[index].createdAt;
                     orders[index] = order;
                 }
             } else {
-                // 添加新订单
                 orders.push(order);
             }
             
@@ -969,7 +1141,6 @@
             updateStats();
         }
 
-        // 编辑订单
         function editOrder(id) {
             const orders = getOrders();
             const order = orders.find(o => o.id === id);
@@ -977,27 +1148,25 @@
             if (order) {
                 document.getElementById('order-date').value = order.date;
                 document.getElementById('order-category').value = order.category;
+                document.getElementById('product-code').value = order.productCode || '';
+                document.getElementById('product-size').value = order.productSize || '';
                 document.getElementById('unit-price').value = order.unitPrice;
                 document.getElementById('quantity').value = order.quantity;
                 document.getElementById('logistics-status').value = order.logisticsStatus;
                 document.getElementById('goods-status').value = order.goodsStatus;
                 document.getElementById('money-status').value = order.moneyStatus;
                 document.getElementById('financial-status').value = order.financialStatus;
+                document.getElementById('remarks').value = order.remarks || '';
                 document.getElementById('edit-id').value = order.id;
                 
-                // 更新总价和状态显示
                 calculateTotalPrice();
                 updateStatusDisplay();
                 
-                // 更新按钮文本
                 document.getElementById('save-btn').innerHTML = '<i class="fas fa-save"></i> 更新订单';
-                
-                // 滚动到表单
                 document.querySelector('.left-column').scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        // 删除订单
         function deleteOrder(id) {
             if (confirm('确定要删除这个订单吗？')) {
                 let orders = getOrders();
@@ -1006,14 +1175,12 @@
                 renderOrders();
                 updateStats();
                 
-                // 如果正在编辑此订单，重置表单
                 if (document.getElementById('edit-id').value === id) {
                     resetForm();
                 }
             }
         }
 
-        // 获取类别显示文本
         function getCategoryText(category) {
             const categoryMap = {
                 'shoe': '鞋',
@@ -1025,7 +1192,6 @@
             return categoryMap[category] || category;
         }
 
-        // 获取类别CSS类
         function getCategoryClass(category) {
             const classMap = {
                 'shoe': 'category-shoe',
@@ -1037,49 +1203,33 @@
             return classMap[category] || 'category-other';
         }
 
-        // 获取状态指示灯颜色类
-        function getLightClass(status) {
-            const classMap = {
-                'yellow': 'light-yellow',
-                'blue': 'light-blue',
-                'green': 'light-green'
-            };
-            return classMap[status] || 'light-yellow';
-        }
-
-        // 渲染订单列表
         function renderOrders(filter = 'all', searchTerm = '') {
             const orders = getOrders();
             const ordersList = document.getElementById('orders-list');
             
-            // 过滤和排序订单
             let filteredOrders = orders;
             
-            // 应用搜索过滤
             if (searchTerm) {
                 const term = searchTerm.toLowerCase();
                 filteredOrders = filteredOrders.filter(order => {
                     return (
                         getCategoryText(order.category).toLowerCase().includes(term) ||
+                        (order.productCode && order.productCode.toLowerCase().includes(term)) ||
+                        (order.productSize && order.productSize.toLowerCase().includes(term)) ||
+                        (order.remarks && order.remarks.toLowerCase().includes(term)) ||
                         order.statusText.toLowerCase().includes(term) ||
-                        order.date.includes(term) ||
-                        order.statusCode.toLowerCase().includes(term)
+                        order.date.includes(term)
                     );
                 });
             }
             
-            // 应用财务状态过滤
             if (filter !== 'all') {
                 filteredOrders = filteredOrders.filter(order => order.financialStatus === filter);
             }
             
-            // 排序：待结算的订单置顶，然后按创建时间倒序
             filteredOrders.sort((a, b) => {
-                // 待结算订单优先
                 if (a.financialStatus === 'pending' && b.financialStatus !== 'pending') return -1;
                 if (a.financialStatus !== 'pending' && b.financialStatus === 'pending') return 1;
-                
-                // 然后按创建时间倒序
                 return new Date(b.createdAt) - new Date(a.createdAt);
             });
             
@@ -1097,33 +1247,23 @@
             ordersList.innerHTML = '';
             
             filteredOrders.forEach(order => {
-                const orderElement = document.createElement('div');
-                orderElement.className = 'order-item';
-                
-                // 检查订单是否已结算超过15天
-                let shouldDelete = false;
                 if (order.financialStatus === 'completed' && order.updatedAt) {
                     const updatedDate = new Date(order.updatedAt);
                     const now = new Date();
                     const daysDiff = Math.floor((now - updatedDate) / (1000 * 60 * 60 * 24));
                     if (daysDiff > 15) {
-                        shouldDelete = true;
+                        let orders = getOrders();
+                        orders = orders.filter(o => o.id !== order.id);
+                        saveOrders(orders);
+                        return;
                     }
-                }
-                
-                // 如果应该删除，跳过渲染并从存储中删除
-                if (shouldDelete) {
-                    let orders = getOrders();
-                    orders = orders.filter(o => o.id !== order.id);
-                    saveOrders(orders);
-                    return; // 跳过这个订单的渲染
                 }
                 
                 const categoryText = getCategoryText(order.category);
                 const categoryClass = getCategoryClass(order.category);
-                const logisticsLightClass = getLightClass(order.logisticsStatus);
-                const goodsLightClass = getLightClass(order.goodsStatus);
-                const moneyLightClass = getLightClass(order.moneyStatus);
+                
+                const orderElement = document.createElement('div');
+                orderElement.className = 'order-item';
                 
                 const financialStatusText = order.financialStatus === 'pending' ? '待财务结算' : '已结算';
                 const financialStatusClass = order.financialStatus === 'pending' ? 'financial-pending' : 'financial-completed';
@@ -1135,30 +1275,52 @@
                     </div>
                     <div class="order-details">
                         <div class="detail-item">
-                            <span class="detail-label">拿货价:</span>
+                            <span class="detail-label">货号/型号</span>
+                            <span class="detail-value">${order.productCode || '—'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">尺码/参数</span>
+                            <span class="detail-value">${order.productSize || '—'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">拿货价</span>
                             <span class="detail-value">${order.unitPrice.toFixed(3)} 元/件</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">件数:</span>
+                            <span class="detail-label">件数</span>
                             <span class="detail-value">${order.quantity} 件</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">总拿货价:</span>
+                            <span class="detail-label">总价</span>
                             <span class="detail-value">${order.totalPrice} 元</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">状态:</span>
-                            <span class="detail-value">${order.statusCode} - ${order.statusText}</span>
+                            <span class="detail-label">状态</span>
+                            <span class="detail-value">${order.statusCode}</span>
                         </div>
                     </div>
                     <div class="order-status">
                         <div class="order-lights">
-                            <div class="order-light ${logisticsLightClass}" title="物流状态"></div>
-                            <div class="order-light ${goodsLightClass}" title="货物状态"></div>
-                            <div class="order-light ${moneyLightClass}" title="钱款状态"></div>
+                            <div class="order-light-item">
+                                <span class="order-light-label">物流</span>
+                                <div class="order-light ${order.logisticsStatus === 'yellow' ? 'light-yellow' : order.logisticsStatus === 'blue' ? 'light-blue' : 'light-green'}"></div>
+                            </div>
+                            <div class="order-light-item">
+                                <span class="order-light-label">货物</span>
+                                <div class="order-light ${order.goodsStatus === 'yellow' ? 'light-yellow' : order.goodsStatus === 'blue' ? 'light-blue' : 'light-green'}"></div>
+                            </div>
+                            <div class="order-light-item">
+                                <span class="order-light-label">钱款</span>
+                                <div class="order-light ${order.moneyStatus === 'yellow' ? 'light-yellow' : order.moneyStatus === 'blue' ? 'light-blue' : 'light-green'}"></div>
+                            </div>
                         </div>
                         <div class="order-financial ${financialStatusClass}">${financialStatusText}</div>
                     </div>
+                    ${order.remarks ? `
+                    <div class="order-remarks">
+                        <i class="fas fa-pen"></i> 备注: ${order.remarks}
+                    </div>
+                    ` : ''}
                     <div class="order-actions">
                         <button class="action-btn edit-btn" onclick="editOrder('${order.id}')">
                             <i class="fas fa-edit"></i> 编辑
@@ -1173,7 +1335,6 @@
             });
         }
 
-        // 更新统计信息
         function updateStats() {
             const orders = getOrders();
             const totalOrders = orders.length;
@@ -1185,13 +1346,16 @@
             document.getElementById('completed-orders').textContent = completedOrders;
         }
 
-        // 初始化
+        function performSearch() {
+            const searchTerm = document.getElementById('search-input').value;
+            const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+            renderOrders(activeFilter, searchTerm);
+        }
+
         function init() {
-            // 设置当前日期为默认日期
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('order-date').value = today;
             
-            // 绑定事件监听器
             document.getElementById('unit-price').addEventListener('input', calculateTotalPrice);
             document.getElementById('quantity').addEventListener('input', calculateTotalPrice);
             document.getElementById('logistics-status').addEventListener('change', updateStatusDisplay);
@@ -1201,12 +1365,9 @@
             document.getElementById('reset-btn').addEventListener('click', resetForm);
             document.getElementById('search-btn').addEventListener('click', performSearch);
             document.getElementById('search-input').addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    performSearch();
-                }
+                if (event.key === 'Enter') performSearch();
             });
             
-            // 绑定筛选按钮
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -1217,20 +1378,11 @@
                 });
             });
             
-            // 初始渲染
             updateStatusDisplay();
             renderOrders();
             updateStats();
         }
 
-        // 执行搜索
-        function performSearch() {
-            const searchTerm = document.getElementById('search-input').value;
-            const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
-            renderOrders(activeFilter, searchTerm);
-        }
-
-        // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
